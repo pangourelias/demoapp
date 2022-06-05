@@ -17,10 +17,6 @@ builder.Services.AddIdentityServices(_config); //this was a service i created (i
 builder.Services.AddControllers();
 builder.Services.AddCors(); //This is for cross domain requests. Policy is set below. 
 
-//gets connection string from appsettings file
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,8 +30,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-
-
 
 
 app.UseHttpsRedirection();
