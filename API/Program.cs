@@ -1,17 +1,25 @@
+using System.Text;
 using API.Data;
+using API.Interfaces;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+var _config = builder.Configuration;
 
 // Add services to the container.
-
+builder.Services.AddApplicatonServices(_config); //this was a service i created (applicationserviceextensions)
+builder.Services.AddIdentityServices(_config); //this was a service i created (identityserviceextensions)
 builder.Services.AddControllers();
-builder.Services.AddCors();
+builder.Services.AddCors(); //This is for cross domain requests. Policy is set below. 
 
 //gets connection string from appsettings file
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlite("connectionString"));
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,7 +41,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
